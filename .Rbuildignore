@@ -1,0 +1,8 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^shdackr\.Rcheck$
+^shdackr.*\.tar\.gz$
+^shdackr.*\.tgz$
+^LICENSE\.md$
+^README\.Rmd$
+^app\.R$

@@ -1,0 +1,21 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# shdackr
+
+This is a template R package for creating a Shiny dashboard application.
+When using this template, make the following changes:
+
+1.  Rename the `shdackr.Rproj` file to the name of the package being
+    developed and click to re-open the project in RStudio
+
+2.  Change the following to replace instances of `shdackr` with the name
+    of the package being developed:
+
+    - `.gitignore`
+    - `.Rbuildignore`
+    - `DESCRIPTION`
+    - `R/app_ui.R`
+    - `tests/testthat.R`
+    - `inst/app/server.R`
+    - `inst/app/ui.R`
