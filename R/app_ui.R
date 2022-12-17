@@ -21,8 +21,7 @@ app_ui <- function() {
 #' Add external resources in the www folder
 add_resources <- function() {
 
-    # TODO - Update package name
-    addResourcePath("www", system.file("app/www", package = "shdackr"))
+    addResourcePath("www", system.file("app/www", package = "shinyscratch01"))
 
     tags$head(
         # Add external resources here

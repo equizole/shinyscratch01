@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# shdackr
+# shinyscratch01
 
 This is a template R package for creating a Shiny dashboard application.
 When using this template, make the following changes:

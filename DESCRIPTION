@@ -1,11 +1,10 @@
-Package: shdackr
-Title: A Shiny application R package template
+Package: shinyscratch01
+Title: A scratch Shiny application
 Version: 0.0.0.9000
 Authors@R: as.person(c(
     "Mark Stetz <mark.stetz@gmail.com> [aut, cre]" 
     ))
-Description: This is a template for creating a Shiny application using the R
-    package format. See app.R for deployment instructions.
+Description: This is a scratch project. See app.R for deployment instructions.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 ```
-# shdackr
+# shinyscratch01
 
 This is a template R package for creating a Shiny dashboard application. When using this template, make the following changes:
 

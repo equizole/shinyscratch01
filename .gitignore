@@ -5,9 +5,9 @@
 project.Rcheck/
 project*.tar.gz
 project*.tgz
-shdackr.Rcheck/
-shdackr*.tar.gz
-shdackr*.tgz
+shinyscratch01.Rcheck/
+shinyscratch01*.tar.gz
+shinyscratch01*.tgz
 
 # You may want to version rsconnect/ for real projects (this is just a template
 # project) -- see the RStudio Connect: User Guide for details

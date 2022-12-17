@@ -1,4 +1,4 @@
 library(testthat)
-library(shdackr)
+library(shinyscratch01)
 
-test_check("shdackr")
+test_check("shinyscratch01")
