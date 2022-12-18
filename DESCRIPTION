@@ -11,6 +11,8 @@ LazyData: true
 Suggests: 
     testthat
 Imports: 
+    reactable,
     shiny,
-    shinydashboard
+    shinydashboard,
+    tibble
 RoxygenNote: 7.2.3

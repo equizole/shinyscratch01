@@ -7,9 +7,9 @@ app_ui <- function() {
         dashboardPage(
             skin = "green",
 
-            dashboardHeader(title = "Hello World!"),
+            dashboardHeader(title = "Income Tax Calculator"),
 
-            dashboardSidebar(),
+            dashboardSidebar(disable = TRUE),
 
             dashboardBody(
                 mod_template_ui("template_ui_1")
