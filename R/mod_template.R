@@ -27,51 +27,52 @@ mod_template_ui <- function(id) {
 
         fluidRow(
             column(12,
-                sliderInput(
-                    ns("salary_hourly"),
-                    label = "Salary -- Hourly",
-                    value = initial_hourly_salary,
-                    min = 0,
-                    max = 50,
-                    step = 1,
-                    width = "100%")
-            ),
-        ),
-
-        fluidRow(
-            column(12,
-                   sliderInput(
-                       ns("salary_annual"),
-                       label = "Salary -- Annual",
-                       value = initial_annual_salary,
-                       min = 0,
-                       max = 100000,
-                       step = 1000,
-                       width = "100%")
-            ),
-        ),
-
-        fluidRow(
-            column(12,
-                sliderInput(
-                    ns("distribution_401k"),
-                    label = "401k Distribution",
-                    value = 50000,
-                    min = 0,
-                    max = 150000,
-                    step = 5000,
-                    width = "100%"
-                )
-            ),
-        ),
-
-        fluidRow(
-            column(1, offset = 5,
-                actionButton(ns("calc_button"), label = "Calculate")
+                box(
+                    title = "Salary",
+                    status = "success",
+                    solidHeader = TRUE,
+                    width = "100%",
+                    sliderInput(
+                        ns("salary_hourly"),
+                        label = "Hourly",
+                        value = initial_hourly_salary,
+                        min = 0,
+                        max = 120,
+                        step = 1,
+                        width = "100%"
+                    ),
+                    sliderInput(
+                        ns("salary_annual"),
+                        label = "Annual",
+                        value = initial_annual_salary,
+                        min = 0,
+                        max = 250000,
+                        step = 5000,
+                        width = "100%"
+                    )
+                ),
             )
         ),
 
-        hr(),
+        fluidRow(
+            column(12,
+                box(
+                    title = "401k Distribution",
+                    status = "success",
+                    solidHeader = TRUE,
+                    width = "100%",
+                    sliderInput(
+                        ns("distribution_401k"),
+                        label = NULL,
+                        value = 50000,
+                        min = 0,
+                        max = 150000,
+                        step = 5000,
+                        width = "100%"
+                    )
+                )
+            ),
+        ),
 
         fluidRow(
             column(12, reactable::reactableOutput(ns("calc_results")))
@@ -110,27 +111,23 @@ mod_template_server <- function(id) {
                 )
             })
 
-            calc_result <- eventReactive(input$calc_button, {
-                income_salary <- input$salary_annual
-                income_401k <- input$distribution_401k
-                calc_tax_table(income_salary, income_401k)
-            })
-
-
             # Display results
-            output$calc_results <- reactable::renderReactable(
+            output$calc_results <- reactable::renderReactable({
+                df <- calc_tax_table(input$salary_annual, input$distribution_401k)
+
                 reactable::reactable(
-                    calc_result(),
+                    df,
                     defaultPageSize = 15,
+                    compact = TRUE,
                     columns = list(
-                        type = reactable::colDef(
-                            name = "Type"
+                        line_item = reactable::colDef(
+                            name = "Line Item"
                         ),
                         monthly_amount = reactable::colDef(
                             name = "Monthly Amount",
                             format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 2)
                         ),
-                        yearly_amounts = reactable::colDef(
+                        yearly_amount = reactable::colDef(
                             name = "Yearly Amount",
                             format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 2)
                         ),
@@ -138,13 +135,22 @@ mod_template_server <- function(id) {
                             name = "Tax Bracket",
                             format = reactable::colFormat(percent = TRUE, digits = 0)
                         ),
-                        effective_tax_rates = reactable::colDef(
+                        effective_tax_rate = reactable::colDef(
                             name = "Effective Tax Rate",
                             format = reactable::colFormat(percent = TRUE, digits = 1)
                         )
-                    )
+                    ),
+                    rowStyle = function(index) {
+                        line_item = df[[index, "line_item"]]
+
+                        if (!is.na(line_item) & stringr::str_starts(line_item, "Total")) {
+                            list(background = "rgba(0, 0, 0, 0.05)")
+                        } else if (!is.na(line_item) & line_item %in% c("Gross Income", "Net Income")) {
+                            list(background = "rgba(102, 204, 0, 0.05)")
+                        }
+                    }
                 )
-            )
+            })
         }
     )
 }

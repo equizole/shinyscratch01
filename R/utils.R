@@ -104,130 +104,113 @@ calc_income_tax_social_security <- function(income) {
 calc_tax_table <- function(income_salary, income_401k) {
 
     # Initialize columns
-    types <- character()
+    line_items <- character()
     monthly_amounts <- double()
     yearly_amounts <- double()
     tax_brackets <- double()
     effective_tax_rates <- double()
 
-    # Gross income
+    # Calculations
     income_gross <- income_salary + income_401k
 
-    types <- append(types, "Gross Income")
+    federal_income_taxes <- calc_income_tax_federal(income_gross)
+    state_income_taxes <- calc_income_tax_state(income_gross)
+    total_income_tax <- federal_income_taxes$tax + state_income_taxes$tax
+    effective_tax_rate_income <- round(total_income_tax / income_gross, 4)
+
+    social_security_tax <- calc_income_tax_social_security(income_salary)
+    medicare_taxes <- calc_income_tax_medicare(income_salary)
+    total_fica_tax <- social_security_tax + medicare_taxes$tax
+
+    total_tax <- total_income_tax + total_fica_tax
+    effective_tax_rate_total <- round(total_tax / income_gross, 4)
+    income_net <- income_gross - total_tax
+
+    # Gross income
+    line_items <- append(line_items, "Gross Income")
     monthly_amounts <- append(monthly_amounts, round(income_gross / 12, 2))
     yearly_amounts <- append(yearly_amounts, round(income_gross, 2))
     tax_brackets <- append(tax_brackets, NA_real_)
     effective_tax_rates <- append(effective_tax_rates, NA_real_)
 
+    # Total taxes
+    line_items <- append(line_items, "Total Tax")
+    monthly_amounts <- append(monthly_amounts, round(total_tax / 12, 2))
+    yearly_amounts <- append(yearly_amounts, total_tax)
+    tax_brackets <- append(tax_brackets, NA_real_)
+    effective_tax_rates <- append(effective_tax_rates, effective_tax_rate_total)
+
+    # Net income
+    line_items <- append(line_items, "Net Income")
+    monthly_amounts <- append(monthly_amounts, round(income_net / 12, 2))
+    yearly_amounts <- append(yearly_amounts, round(income_net, 2))
+    tax_brackets <- append(tax_brackets, NA_real_)
+    effective_tax_rates <- append(effective_tax_rates, NA_real_)
+
     # Blank row
-    types <- append(types, NA_character_)
+    line_items <- append(line_items, NA_character_)
     monthly_amounts <- append(monthly_amounts, NA_real_)
     yearly_amounts <- append(yearly_amounts, NA_real_)
     tax_brackets <- append(tax_brackets, NA_real_)
     effective_tax_rates <- append(effective_tax_rates, NA_real_)
 
     # Federal income taxes
-    federal_income_taxes <- calc_income_tax_federal(income_gross)
-
-    types <- append(types, "Federal Income Tax")
+    line_items <- append(line_items, "Federal Income Tax")
     monthly_amounts <- append(monthly_amounts, round(federal_income_taxes$tax / 12, 2))
     yearly_amounts <- append(yearly_amounts, round(federal_income_taxes$tax, 2))
     tax_brackets <- append(tax_brackets, federal_income_taxes$tax_bracket)
     effective_tax_rates <- append(effective_tax_rates, federal_income_taxes$effective_tax_rate)
 
     # State income taxes
-    state_income_taxes <- calc_income_tax_state(income_gross)
-
-    types <- append(types, "State Income Tax")
+    line_items <- append(line_items, "State Income Tax")
     monthly_amounts <- append(monthly_amounts, round(state_income_taxes$tax / 12, 2))
     yearly_amounts <- append(yearly_amounts, round(state_income_taxes$tax, 2))
     tax_brackets <- append(tax_brackets, state_income_taxes$tax_bracket)
     effective_tax_rates <- append(effective_tax_rates, state_income_taxes$effective_tax_rate)
 
     # Total income taxes
-    total_income_tax <- federal_income_taxes$tax + state_income_taxes$tax
-    effective_tax_rate <- round(total_income_tax / income_gross, 4)
-
-    types <- append(types, "Total Income Tax")
+    line_items <- append(line_items, "Total Income Tax")
     monthly_amounts <- append(monthly_amounts, round(total_income_tax / 12, 2))
     yearly_amounts <- append(yearly_amounts, total_income_tax)
     tax_brackets <- append(tax_brackets, NA_real_)
-    effective_tax_rates <- append(effective_tax_rates, effective_tax_rate)
+    effective_tax_rates <- append(effective_tax_rates, effective_tax_rate_income)
 
     # Blank row
-    types <- append(types, NA_character_)
+    line_items <- append(line_items, NA_character_)
     monthly_amounts <- append(monthly_amounts, NA_real_)
     yearly_amounts <- append(yearly_amounts, NA_real_)
     tax_brackets <- append(tax_brackets, NA_real_)
     effective_tax_rates <- append(effective_tax_rates, NA_real_)
 
     # Social Security taxes (salary income only)
-    social_security_tax <- calc_income_tax_social_security(income_salary)
-
-    types <- append(types, "Social Security Tax")
+    line_items <- append(line_items, "Social Security Tax")
     monthly_amounts <- append(monthly_amounts, round(social_security_tax / 12, 2))
     yearly_amounts <- append(yearly_amounts, round(social_security_tax, 2))
     tax_brackets <- append(tax_brackets, NA_real_)
     effective_tax_rates <- append(effective_tax_rates, NA_real_)
 
     # Medicare taxes (salary income only)
-    medicare_taxes <- calc_income_tax_medicare(income_salary)
-
-    types <- append(types, "Medicare Tax")
+    line_items <- append(line_items, "Medicare Tax")
     monthly_amounts <- append(monthly_amounts, round(medicare_taxes$tax / 12, 2))
     yearly_amounts <- append(yearly_amounts, round(medicare_taxes$tax, 2))
     tax_brackets <- append(tax_brackets, NA_real_)
     effective_tax_rates <- append(effective_tax_rates, NA_real_)
 
     # Total FICA taxes
-    total_fica_tax <- social_security_tax + medicare_taxes$tax
-    effective_tax_rate <- round(total_income_tax / income_gross, 4)
-
-    types <- append(types, "Total FICA Tax")
+    line_items <- append(line_items, "Total FICA Tax")
     monthly_amounts <- append(monthly_amounts, round(total_fica_tax / 12, 2))
     yearly_amounts <- append(yearly_amounts, total_fica_tax)
     tax_brackets <- append(tax_brackets, NA_real_)
     effective_tax_rates <- append(effective_tax_rates, NA_real_)
 
-    # Blank row
-    types <- append(types, NA_character_)
-    monthly_amounts <- append(monthly_amounts, NA_real_)
-    yearly_amounts <- append(yearly_amounts, NA_real_)
-    tax_brackets <- append(tax_brackets, NA_real_)
-    effective_tax_rates <- append(effective_tax_rates, NA_real_)
-
-    # Total taxes
-    total_tax <- total_income_tax + total_fica_tax
-    effective_tax_rate <- round(total_tax / income_gross, 4)
-
-    types <- append(types, "Total Tax")
-    monthly_amounts <- append(monthly_amounts, round(total_tax / 12, 2))
-    yearly_amounts <- append(yearly_amounts, total_tax)
-    tax_brackets <- append(tax_brackets, NA_real_)
-    effective_tax_rates <- append(effective_tax_rates, effective_tax_rate)
-
-    # Blank row
-    types <- append(types, NA_character_)
-    monthly_amounts <- append(monthly_amounts, NA_real_)
-    yearly_amounts <- append(yearly_amounts, NA_real_)
-    tax_brackets <- append(tax_brackets, NA_real_)
-    effective_tax_rates <- append(effective_tax_rates, NA_real_)
-
-    # Net income
-    income_net <- income_gross - total_tax
-
-    types <- append(types, "Net Income")
-    monthly_amounts <- append(monthly_amounts, round(income_net / 12, 2))
-    yearly_amounts <- append(yearly_amounts, round(income_net, 2))
-    tax_brackets <- append(tax_brackets, NA_real_)
-    effective_tax_rates <- append(effective_tax_rates, NA_real_)
-
     # Create the DataFrame
     tax_table <- tibble::tibble(
-        type = types,
+        line_item = line_items,
         monthly_amount = monthly_amounts,
-        yearly_amounts = yearly_amounts,
+        yearly_amount = yearly_amounts,
         tax_bracket = tax_brackets,
-        effective_tax_rates = effective_tax_rates
+        effective_tax_rate = effective_tax_rates
     )
 }
+
+temp_01 <- calc_tax_table(50000, 50000)
