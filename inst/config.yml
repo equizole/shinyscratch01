@@ -1,0 +1,17 @@
+default:
+    tax_config:
+        federal:
+            standard_deduction: 25900
+            tax_brackets: [10, 12, 22, 24, 32, 35, 37]
+            tax_brackets_mins: [0, 20550, 83550, 178150, 340100, 431900, 647850]
+        state:
+            standard_deduction: 8520
+            tax_brackets: [0, 3, 4, 5, 6, 7]
+            tax_brackets_mins: [0, 3070, 6150, 9230, 12310, 15400]
+        medicare:
+            standard_deduction: 0
+            tax_brackets: [1.45, 0.9]
+            tax_brackets_mins: [0, 250000]
+        social_security:
+            income_max: 147000
+            tax_rate: 0.062

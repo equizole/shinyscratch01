@@ -93,6 +93,10 @@ mod_template_server <- function(id) {
         id,
         function(input, output, session) {
 
+            # Get the tax brackets, rates, standard deductions
+            config <- config::get(file = "inst/config.yml")
+            tax_config <- config$tax_config
+
             # When the hourly salary slider changes, update the annual salary slider
             observeEvent(input$salary_hourly,  {
                 updateSliderInput(
@@ -113,7 +117,11 @@ mod_template_server <- function(id) {
 
             # Display results
             output$calc_results <- reactable::renderReactable({
-                df <- calc_tax_table(input$salary_annual, input$distribution_401k)
+                df <- calc_tax_table(
+                    input$salary_annual,
+                    input$distribution_401k,
+                    tax_config
+                )
 
                 reactable::reactable(
                     df,
